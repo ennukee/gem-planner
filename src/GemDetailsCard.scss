@@ -1,0 +1,50 @@
+.gem-name {
+    text-transform: uppercase;
+    font-weight: 100;
+    font-size: 32px;
+}
+
+.gem-level {
+    font-weight: 100;
+}
+
+.quest {
+    margin-top: -8px;
+
+    .quest-name {
+        text-transform: capitalize;
+    }
+    
+    .quest-act {
+        font-size: 24px;
+        font-weight: 100;
+        text-transform: uppercase;
+    }
+}
+
+.quest-qualifier {
+    display: flex;
+    gap: 5px;
+    flex-direction: row;
+    align-items: center;
+    font-weight: 400;
+}
+
+.vr {
+    width: 2px;
+    height: 80%;
+    background-color: #222;
+}
+
+.quest-name {
+    font-size: 16px;
+    font-weight: 300;
+}
+
+.quest-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    // gap: 8px;
+    // justify-content: end;
+}
