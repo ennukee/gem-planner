@@ -31,8 +31,6 @@ const GemDetailsCard: React.FC<IProps> = ({
       ? 'group'
       : 'cant'
 
-  console.log(questSource)
-  console.log(qS)
   return (
     <Box m={2}>
       <div className="gem-name">{name}</div>

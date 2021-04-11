@@ -11,10 +11,19 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Select from '@material-ui/core/Select';
+import Fab from '@material-ui/core/Fab';
+import PublishIcon from '@material-ui/icons/Publish';
+import GetAppIcon from '@material-ui/icons/GetApp';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 /* End of Material UI */
 
 import rawGemData from './gemdata.json'
 import GemDetailsCard from './GemDetailsCard';
+import { Typography } from '@material-ui/core';
 
 type TQuest = {
   act: string,
@@ -72,10 +81,15 @@ export enum CharacterType {
   Templar = "Templar"
 }
 
-// ! START OF COMPONENT ! //
+// !  =========================================================================== ! //
+// !  ========================== START OF COMPONENT ============================= ! //
+// !  =========================================================================== ! //
 function App() {
   const [character, setCharacter] = useState<CharacterType>(CharacterType.Scion)
   const [groupCharacters, setGroupCharacters] = useState<CharacterType[]>([])
+  const [importDialogOpen, setImportDialogOpen] = useState<boolean>(false)
+  const [exportDialogOpen, setExportDialogOpen] = useState<boolean>(false)
+  const [importString, setImportString] = useState<string>('')
   const [activeGems, modifyGem] = useReducer((state: Array<string>, action: TGemAction) => {
     if (!action.gem) return state
     switch(action.type) {
@@ -115,8 +129,82 @@ function App() {
     setGroupCharacters(event.target.value as CharacterType[])
   }
 
+  const handleImportDialogClose = () => setImportDialogOpen(false)
+
+  const handleImportDialogSubmit = () => {
+    setImportDialogOpen(false)
+    const gems = importString.split(',').map((substring: string) => substring.trim())
+    gems.forEach(gem => modifyGem({ type: 'add', gem}))
+  }
+
+  const handleImportStringChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setImportString(event.target.value as string)
+  }
+
+  const handleExportDialogClose = () => setExportDialogOpen(false)
+
+
+  // ! It was a mistake not to extrapolate some of these into their own subcomponents but I am too deep
+  // ! and close to completion in a hobbyist project to bother changing now
   return (
     <div className="app">
+      <div id="data-controls">
+        <Fab onClick={() => setExportDialogOpen(true)} aria-label="export">
+          <GetAppIcon className="icon" />
+        </Fab>
+        <Fab onClick={() => setImportDialogOpen(true)} aria-label="export">
+          <PublishIcon className="icon" />
+        </Fab>
+      </div>
+      <div id="dialog-container">
+        <Dialog
+          open={importDialogOpen}
+          onClose={handleImportDialogClose}
+          aria-labelledby="import-dialog-title"
+        >
+          <DialogTitle id="import-dialog-title">
+            Import Gems
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Enter a list of exact gem names (case sensitive) separated by commas in the field below, then click 'OK'
+            </DialogContentText>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="import-string"
+              label="Gem list"
+              value={importString}
+              onChange={handleImportStringChange}
+              fullWidth
+            />
+            <DialogActions>
+              <Button onClick={handleImportDialogSubmit}>OK</Button>
+              <Button onClick={handleImportDialogClose}>Cancel</Button>
+            </DialogActions>
+          </DialogContent>
+        </Dialog>
+        <Dialog
+          open={exportDialogOpen}
+          onClose={handleExportDialogClose}
+          aria-labelledby="export-dialog-title"
+        >
+          <DialogTitle id="export-dialog-title">
+            Export Gems
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText gutterBottom>
+              Copy the string below and put it somewhere you won't lose it.
+            </DialogContentText>
+            <DialogContentText color="textPrimary">
+              {activeGems.length > 0 ? activeGems.join(', ') : 'Select gems to export them'}
+            </DialogContentText>
+            <DialogActions>
+              <Button onClick={handleExportDialogClose}>OK</Button>
+            </DialogActions>
+          </DialogContent>
+        </Dialog>
+      </div>
       <div className="body">
         <div id="controls">
           <div id="class-picker">
