@@ -31,6 +31,8 @@ const GemDetailsCard: React.FC<IProps> = ({
       ? 'group'
       : 'cant'
 
+  console.log(questSource)
+  console.log(qS)
   return (
     <Box m={2}>
       <div className="gem-name">{name}</div>
@@ -70,7 +72,13 @@ const GemDetailsCard: React.FC<IProps> = ({
               return (
                 <span className="quest-qualifier" style={{ color: yellow[900] }}>
                   <CloseIcon fontSize="small" />
-                  <span style={{ color: red[500] }}>You cannot buy this until the library quest in Act 3</span>
+                  {(+questSource.act > 3) 
+                    ? (
+                      <span style={{ color: red[500] }}>You cannot buy this until the beach clearing quest in Act 6</span>
+                    ) : (
+                      <span style={{ color: red[500] }}>You cannot buy this until the library quest in Act 3</span>
+                    )
+                  }
                 </span>
               )
           }

@@ -39,13 +39,15 @@ const gemData: IGemData[] = rawGemData.filter(gem => {
 }).map(gem => ({
   name: gem.name,
   level: +gem.level || 31,
-  vendorClasses: gem.vendors[0] && gem.vendors[0].classes,
+  vendorClasses: gem.vendors.filter(vendor => vendor.act !== '1')[0]?.classes,
   questSource: gem.quests[0] || {
     act: "3",
     name: "fixture_of_fate",
     classes: "All, Classes"
   },
 }))
+
+// console.log(rawGemData.filter(l => l.vendors.length > 1).map(gem => gem.name))
 
 const gemMap: {[key: string]: IGemData} = gemData.reduce((total, gem) => {
   // @ts-expect-error idk wtf is going up here honestly
